@@ -1,4 +1,4 @@
-package drive
+package gdrive
 
 import (
 	"context"
@@ -124,7 +124,7 @@ func saveToken(path string, token *oauth2.Token) {
 // }
 
 func CreateFile(service *drive.Service, name string, mimeType string, content io.Reader, parentId string) (*drive.File, error) {
-	logrus.Info("=================> Processing upload file to Google Drive Server")
+	log.Println("=================> Processing upload file to Google Drive Server")
 
 	f := &drive.File{
 		MimeType: mimeType,
@@ -138,7 +138,7 @@ func CreateFile(service *drive.Service, name string, mimeType string, content io
 		return nil, err
 	}
 
-	logrus.Info("File ", file.Name, " was uploaded to Google Drive!")
+	log.Println("File", file.Name, "was uploaded to Google Drive!")
 
 	return file, nil
 }
