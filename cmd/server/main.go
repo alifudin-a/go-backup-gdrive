@@ -5,7 +5,9 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/alifudin-a/go-backup-gdrive/pkg/gdrive"
 	"github.com/joho/godotenv"
@@ -17,24 +19,84 @@ func init() {
 
 func main() {
 	gdrive.GetDriveService()
-
-	filename := newestFile()
+	dir := "/home/bismillah/"
 	var driveService = gdrive.DriveService
 
-	f, err := os.Open(filename)
+	// filename := newestFile()
+	file, err := findLastFileStartsWith(dir, "siakadonline")
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println(dir + file.Name())
+	fullpath := dir + file.Name()
+
+	f, err := os.Open(fullpath)
 	if err != nil {
 		panic(fmt.Sprintf("Cannot open file: %v", err))
 	}
 	defer f.Close()
 
-	fname := strings.TrimLeft(strings.TrimRight(string(f.Name()), ""), "/home/bismillah/")
+	// fname := strings.TrimLeft(strings.TrimRight(string(f.Name()), ""), "/home/bismillah/")
 
-	// fIDList := os.Getenv("FID_LIST")
 	fIDCreate := os.Getenv("FID_UPLOAD")
-	_, err = gdrive.CreateFile(driveService, fname, "application/octet-stream", f, fIDCreate)
+	_, err = gdrive.CreateFile(driveService, file.Name(), "application/octet-stream", f, fIDCreate)
 	if err != nil {
 		fmt.Printf("Could not create file: %v\n", err)
 	}
+}
+
+func findLastFileStartsWith(dir, prefix string) (lastFile os.FileInfo, err error) {
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		return
+	}
+
+	for _, file := range files {
+		if !file.Mode().IsRegular() {
+			continue
+		}
+		if strings.HasPrefix(file.Name(), prefix) {
+			if lastFile == nil {
+				lastFile = file
+			} else {
+				if lastFile.ModTime().Before(file.ModTime()) {
+					lastFile = file
+				}
+			}
+		}
+	}
+
+	if lastFile == nil {
+		err = os.ErrNotExist
+		return
+	}
+	return
+}
+
+func FindLastModifiedFileBefore(dir string, t time.Time) (path string, info os.FileInfo, err error) {
+	isFirst := true
+	min := 0 * time.Second
+	err = filepath.Walk(dir, func(p string, i os.FileInfo, e error) error {
+		if e != nil {
+			return e
+		}
+
+		if !i.IsDir() && i.ModTime().Before(t) {
+			if isFirst {
+				isFirst = false
+				path = p
+				info = i
+				min = t.Sub(i.ModTime())
+			}
+			if diff := t.Sub(i.ModTime()); diff < min {
+				path = p
+				min = diff
+				info = i
+			}
+		}
+		return nil
+	})
+	return
 }
 
 func newestFile() string {
@@ -52,9 +114,40 @@ func newestFile() string {
 			newestTime = currTime
 			newestFile = f.Name()
 		}
+		log.Println(currTime)
 	}
 
 	fullpath := dir + newestFile
 	log.Println(fullpath)
+	log.Println(newestFile)
+	log.Println(newestTime)
 	return fullpath
+}
+
+func newerFile() []string {
+	dir := `/home/bismillah` // Windows directory
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	var modTime time.Time
+	var names []string
+	for _, fi := range files {
+		if fi.Mode().IsRegular() {
+			if !fi.ModTime().Before(modTime) {
+				if fi.ModTime().After(modTime) {
+					modTime = fi.ModTime()
+					names = names[:0]
+				}
+				names = append(names, fi.Name())
+			}
+		}
+	}
+	if len(names) > 0 {
+		fmt.Println(modTime, names)
+		return names
+	}
+
+	return names
 }

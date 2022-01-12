@@ -6,3 +6,4 @@ bin/go-backup-gdrive
 # token.json
 *.json
 *.txt
+*.zip
