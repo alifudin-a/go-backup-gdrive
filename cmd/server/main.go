@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/alifudin-a/go-backup-gdrive/pkg/gdrive"
 	"github.com/joho/godotenv"
@@ -20,24 +21,24 @@ func main() {
 	filename := newestFile()
 	var driveService = gdrive.DriveService
 
-	// Step 1: Open  file
 	f, err := os.Open(filename)
 	if err != nil {
 		panic(fmt.Sprintf("Cannot open file: %v", err))
 	}
 	defer f.Close()
 
+	fname := strings.TrimLeft(strings.TrimRight(string(f.Name()), ""), "/home/bismillah/")
+
 	// fIDList := os.Getenv("FID_LIST")
 	fIDCreate := os.Getenv("FID_UPLOAD")
-
-	_, err = gdrive.CreateFile(driveService, f.Name(), "application/octet-stream", f, fIDCreate)
+	_, err = gdrive.CreateFile(driveService, fname, "application/octet-stream", f, fIDCreate)
 	if err != nil {
 		fmt.Printf("Could not create file: %v\n", err)
 	}
 }
 
 func newestFile() string {
-	dir := "/home/fariz/Documents/Puskom/Backup/DB/"
+	dir := "/home/bismillah/"
 	files, _ := ioutil.ReadDir(dir)
 	var newestFile string
 	var newestTime int64 = 0
