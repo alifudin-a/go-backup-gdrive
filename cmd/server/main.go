@@ -19,10 +19,11 @@ func init() {
 
 func main() {
 	gdrive.GetDriveService()
-	dir := "/home/bismillah/"
+	// dir := "/home/bismillah/"
+	// dir := "/home/divierda/Dev/puskom/go-backup-gdrive/bin/"
+	dir := "/home/puskom/BackupDBSIA/"
 	var driveService = gdrive.DriveService
 
-	// filename := newestFile()
 	file, err := findLastFileStartsWith(dir, "siakadonline")
 	if err != nil {
 		log.Println(err)
@@ -34,6 +35,11 @@ func main() {
 	if err != nil {
 		panic(fmt.Sprintf("Cannot open file: %v", err))
 	}
+
+	// fs, err := f.Stat()
+	// if err != nil {
+	// 	log.Println(err)
+	// }
 	defer f.Close()
 
 	// fname := strings.TrimLeft(strings.TrimRight(string(f.Name()), ""), "/home/bismillah/")

@@ -190,7 +190,14 @@ func CreateFile(service *drive.Service, name string, mimeType string, content io
 		Parents:  []string{parentId},
 	}
 
-	file, err := service.Files.Create(f).Media(content).Do()
+	getRate := MeasureTransferRate()
+
+	// progress call back
+	showProgress := func(current, total int64) {
+		fmt.Printf("Uploaded at %s, %s/%s\r", getRate(current), Comma(current), Comma(total))
+	}
+
+	file, err := service.Files.Create(f).Media(content).ProgressUpdater(showProgress).Do()
 	if err != nil {
 		log.Println("Could not create file: " + err.Error())
 		return nil, err
