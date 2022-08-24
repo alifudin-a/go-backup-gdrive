@@ -10,5 +10,5 @@ go run cmd/server/main.go dev
 go run cmd/server/main.go
 
 # How to build this program
-(!) Build version only available for production.
+# (!) Build version only available for production.
 make build
