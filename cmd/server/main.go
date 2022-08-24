@@ -19,8 +19,7 @@ func init() {
 
 func main() {
 	gdrive.GetDriveService()
-	// dir := "/home/bismillah/"
-	// dir := "/home/divierda/Dev/puskom/go-backup-gdrive/bin/"
+
 	dir := "/home/puskom/BackupDBSIA/"
 	var driveService = gdrive.DriveService
 
@@ -36,13 +35,7 @@ func main() {
 		panic(fmt.Sprintf("Cannot open file: %v", err))
 	}
 
-	// fs, err := f.Stat()
-	// if err != nil {
-	// 	log.Println(err)
-	// }
 	defer f.Close()
-
-	// fname := strings.TrimLeft(strings.TrimRight(string(f.Name()), ""), "/home/bismillah/")
 
 	fIDCreate := os.Getenv("FID_UPLOAD")
 	_, err = gdrive.CreateFile(driveService, file.Name(), "application/octet-stream", f, fIDCreate)
