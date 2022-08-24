@@ -1,4 +1,5 @@
-.env.*
+.env.development
+.env.production
 # credentials.json
 bin/go-backup-gdrive
 # test.txt
