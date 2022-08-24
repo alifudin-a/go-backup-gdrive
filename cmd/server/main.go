@@ -14,13 +14,26 @@ import (
 )
 
 func init() {
-	_ = godotenv.Load(".env")
+	if len(os.Args) != 2 {
+		log.Println("Production mode")
+		_ = godotenv.Load(".env.production")
+	} else if os.Args[1] == "dev" {
+		log.Println("Development mode")
+		_ = godotenv.Load(".env.development")
+	}
 }
 
 func main() {
 	gdrive.GetDriveService()
 
-	dir := "/home/puskom/BackupDBSIA/"
+	var dir string
+
+	if os.Getenv("ENV") == "prod" {
+		dir = "/home/puskom/BackupDBSIA/"
+	} else {
+		dir = "/home/divierda/Dev/puskom/go-backup-gdrive/"
+	}
+
 	var driveService = gdrive.DriveService
 
 	file, err := findLastFileStartsWith(dir, "siakadonline")

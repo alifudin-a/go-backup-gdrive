@@ -23,7 +23,15 @@ import (
 var DriveService *drive.Service
 
 func GetDriveService() error {
-	b, err := ioutil.ReadFile("credentials.json")
+	var credentials string
+
+	if os.Getenv("ENV") == "prod" {
+		credentials = "credentials_production.json"
+	} else {
+		credentials = "credentials_development.json"
+	}
+
+	b, err := ioutil.ReadFile(credentials)
 	if err != nil {
 		fmt.Printf("Unable to read credentials.json file. Err: %v\n", err)
 		return err
@@ -58,11 +66,18 @@ func getClient(config *oauth2.Config) *http.Client {
 	// The file token.json stores the user's access and refresh tokens, and is
 	// created automatically when the authorization flow completes for the first
 	// time.
-	tokFile := "token.json"
-	tok, err := tokenFromFile(tokFile)
+	var tokenFile string
+
+	if os.Getenv("ENV") == "prod" {
+		tokenFile = "token_production.json"
+	} else {
+		tokenFile = "token_development.json"
+	}
+
+	tok, err := tokenFromFile(tokenFile)
 	if err != nil {
 		tok = getTokenFromWeb(config)
-		saveToken(tokFile, tok)
+		saveToken(tokenFile, tok)
 	}
 	return config.Client(context.Background(), tok)
 }

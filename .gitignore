@@ -1,4 +1,4 @@
-.env
+.env.*
 # credentials.json
 bin/go-backup-gdrive
 # test.txt
@@ -7,5 +7,4 @@ bin/go-backup-gdrive
 *.json
 *.txt
 *.zip
-siakadonline.sql
-siakadonline-tes.txt
+siakadonline*
