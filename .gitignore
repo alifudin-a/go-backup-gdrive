@@ -8,3 +8,4 @@ bin/go-backup-gdrive
 *.txt
 *.zip
 siakadonline*
+.vscode
