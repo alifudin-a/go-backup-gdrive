@@ -7,3 +7,5 @@ bin/go-backup-gdrive
 *.json
 *.txt
 *.zip
+siakadonline.sql
+siakadonline-tes.txt
