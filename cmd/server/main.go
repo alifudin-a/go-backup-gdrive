@@ -29,9 +29,9 @@ func main() {
 	var dir string
 
 	if os.Getenv("ENV") == "prod" {
-		dir = "/home/puskom/BackupDBSIA/"
+		dir = os.Getenv("DIR")
 	} else {
-		dir = "/home/divierda/Dev/puskom/go-backup-gdrive/"
+		dir = os.Getenv("DIR")
 	}
 
 	var driveService = gdrive.DriveService
