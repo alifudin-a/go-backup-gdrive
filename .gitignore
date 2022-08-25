@@ -10,3 +10,4 @@ bin/go-backup-gdrive
 *.zip
 siakadonline*
 .vscode
+token_*
