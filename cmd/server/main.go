@@ -20,6 +20,8 @@ func init() {
 	} else if os.Args[1] == "dev" {
 		log.Println("Development mode")
 		_ = godotenv.Load(".env.development")
+	} else {
+		log.Fatalln("[error] Unrecognizeable argument!")
 	}
 }
 
