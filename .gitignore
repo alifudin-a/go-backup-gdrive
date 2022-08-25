@@ -5,9 +5,11 @@ bin/go-backup-gdrive
 # test.txt
 # db-tes.txt
 # token.json
-*.json
 *.txt
 *.zip
 siakadonline*
 .vscode
-token_*
+credentials_development.json
+credentials_production.json
+token_development.json
+token_production.json
